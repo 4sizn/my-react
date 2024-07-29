@@ -33,7 +33,9 @@ export function withProcedure<P extends React.PropsWithChildren>(
 ) {
   const resource = () => procedure;
   return function (props: P) {
-    const [a, setA] = useState<ReturnType<typeof procedure> | null>(null);
+    const [a, setA] = useState<ReturnType<ReturnType<typeof resource>> | null>(
+      null
+    );
     useEffect(() => {
       setA(resource());
     }, []);
