@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { withProcedure, wrappedPromise } from "./components";
+import { withProcedure } from "./components";
 function App() {
   return (
     <Suspense fallback="커널 부팅중...">
@@ -22,36 +22,30 @@ function App() {
 
 export default App;
 
-const KurnelComp = withProcedure(KurnelUI, () =>
-  wrappedPromise(
-    new Promise((resolve) => {
-      // setTimeout(() => {
-      console.log("aa");
-      resolve("System 준비완료");
-      // }, 0);
-    })
-  )
-);
+const KurnelComp = withProcedure(KurnelUI, () => {
+  console.log("커널");
+  return "커널 준비완료";
+});
 
-const BootComponent = withProcedure(BootUI, () =>
-  wrappedPromise(
+const BootComponent = withProcedure(
+  BootUI,
+  () =>
     new Promise((resolve) => {
       setTimeout(() => {
-        console.log("aa");
+        console.log("부팅중");
         resolve("System 준비완료");
       }, 0);
     })
-  )
 );
 
-const UIComponent = withProcedure(OSUI, () =>
-  wrappedPromise(
+const UIComponent = withProcedure(
+  OSUI,
+  () =>
     new Promise((resolve) => {
       setTimeout(() => {
         resolve("OS 준비완료");
       }, 3000);
     })
-  )
 );
 
 function KurnelUI(props: React.PropsWithChildren) {

@@ -27,11 +27,13 @@ export function wrappedPromise<T>(promise: Promise<T>) {
   };
 }
 
-export function withProcedure<P extends React.PropsWithChildren>(
+export function withProcedure<T, P extends React.PropsWithChildren>(
   WrappedComponent: ComponentType<P>,
-  procedure: () => ReturnType<typeof wrappedPromise>
+  procedure: () => Promise<T> | T
 ) {
-  const resource = () => procedure;
+  const middleProcedure = () => wrappedPromise(Promise.resolve(procedure()));
+  const resource = () => middleProcedure;
+
   return function (props: P) {
     const [a, setA] = useState<ReturnType<ReturnType<typeof resource>> | null>(
       null
