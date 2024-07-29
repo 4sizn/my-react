@@ -3,7 +3,7 @@ import { withProcedure } from "./components";
 function App() {
   return (
     <Suspense fallback="커널 부팅중...">
-      <KurnelComp>
+      <KernelComp>
         <Suspense>
           <BootComponent>
             <Suspense fallback="OS 준비중..">
@@ -15,14 +15,14 @@ function App() {
             </Suspense>
           </BootComponent>
         </Suspense>
-      </KurnelComp>
+      </KernelComp>
     </Suspense>
   );
 }
 
 export default App;
 
-const KurnelComp = withProcedure(KurnelUI, () => {
+const KernelComp = withProcedure(KernelUI, () => {
   console.log("커널");
   return "커널 준비완료";
 });
@@ -34,7 +34,7 @@ const BootComponent = withProcedure(
       setTimeout(() => {
         console.log("부팅중");
         resolve("System 준비완료");
-      }, 0);
+      }, 3000);
     })
 );
 
@@ -48,10 +48,10 @@ const UIComponent = withProcedure(
     })
 );
 
-function KurnelUI(props: React.PropsWithChildren) {
+function KernelUI(props: React.PropsWithChildren) {
   return (
     <div>
-      <div>KurnelUI 완료</div>
+      <div>KernelUI 완료</div>
       <div {...props} />
     </div>
   );
