@@ -29,11 +29,11 @@ export function wrappedPromise<T>(promise: Promise<T>) {
 
 export function withProcedure<P extends React.PropsWithChildren>(
   WrappedComponent: ComponentType<P>,
-  procedure: any
+  procedure: () => ReturnType<typeof wrappedPromise>
 ) {
   const resource = () => procedure;
   return function (props: P) {
-    const [a, setA] = useState(null);
+    const [a, setA] = useState<ReturnType<typeof procedure> | null>(null);
     useEffect(() => {
       setA(resource());
     }, []);

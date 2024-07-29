@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import { withProcedure, wrappedPromise } from "./components";
 function App() {
   return (
@@ -54,7 +54,7 @@ const UIComponent = withProcedure(OSUI, () =>
   )
 );
 
-function KurnelUI(props) {
+function KurnelUI(props: React.PropsWithChildren) {
   return (
     <div>
       <div>KurnelUI 완료</div>
@@ -63,7 +63,7 @@ function KurnelUI(props) {
   );
 }
 
-function BootUI(props) {
+function BootUI(props: React.PropsWithChildren) {
   return (
     <div>
       <div>BOOTUI 완료</div>
@@ -72,7 +72,7 @@ function BootUI(props) {
   );
 }
 
-function OSUI(props) {
+function OSUI(props: React.PropsWithChildren) {
   return (
     <div>
       <div>OSUI 완료</div>
