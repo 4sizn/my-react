@@ -30,7 +30,7 @@ export function wrappedPromise<T>(promise: Promise<T>) {
 export function withProcedure<T, P extends React.PropsWithChildren>(
   WrappedComponent: ComponentType<P>,
   procedure: () => Promise<T> | T
-) {
+): React.FC<P & { output?: T }> {
   return function (props: P) {
     const [resource, setResource] = useState<ReturnType<
       typeof wrappedPromise
@@ -51,7 +51,6 @@ export function withProcedure<T, P extends React.PropsWithChildren>(
     }
 
     const data = resource.suspenseRead();
-
-    return <WrappedComponent {...props} data={data} />;
+    return <WrappedComponent {...props} output={data} />;
   };
 }

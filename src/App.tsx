@@ -1,4 +1,5 @@
 import React, { Suspense } from "react";
+
 import { withProcedure } from "./components";
 function App() {
   return (
@@ -48,28 +49,28 @@ const UIComponent = withProcedure(
     })
 );
 
-function KernelUI(props: React.PropsWithChildren) {
+function KernelUI(props: React.PropsWithChildren<{ output?: string }>) {
   return (
     <div>
-      <div>KernelUI 완료</div>
+      <div>KernelUI 완료 ##{props?.output}</div>
       <div {...props} />
     </div>
   );
 }
 
-function BootUI(props: React.PropsWithChildren) {
+function BootUI(props: React.PropsWithChildren<{ output?: string }>) {
   return (
     <div>
-      <div>BOOTUI 완료</div>
+      <div>BOOTUI 완료 ##{props?.output}</div>
       <div {...props} />
     </div>
   );
 }
 
-function OSUI(props: React.PropsWithChildren) {
+function OSUI(props: React.PropsWithChildren<{ output?: string }>) {
   return (
     <div>
-      <div>OSUI 완료</div>
+      <div>OSUI 완료 ##{props?.output}</div>
       <div {...props} />
     </div>
   );
