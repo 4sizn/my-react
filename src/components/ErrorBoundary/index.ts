@@ -1,2 +1,1 @@
-export * from "./withProcedure";
 export * from "./ErrorBoundary";

@@ -1,23 +1,55 @@
 import React, { Suspense } from "react";
 
-import { withProcedure } from "./components";
+import { withProcedure, ErrorBoundary } from "./components";
+
 function App() {
   return (
-    <Suspense fallback="커널 부팅중...">
-      <KernelComp>
-        <Suspense>
-          <BootComponent>
-            <Suspense fallback="OS 준비중..">
-              <UIComponent>
-                <Suspense fallback="OS 준비중..1">
-                  <UIComponent />
-                </Suspense>
-              </UIComponent>
+    <ErrorBoundary 
+      fallback={
+        <div style={{ 
+          padding: "20px", 
+          backgroundColor: "#fff3e0", 
+          border: "2px solid #ff9800",
+          borderRadius: "8px",
+          margin: "20px"
+        }}>
+          <h2>🔧 시스템 오류</h2>
+          <p>부팅 과정에서 문제가 발생했습니다. 페이지를 새로고침해주세요.</p>
+        </div>
+      }
+    >
+      <Suspense fallback={<div>커널 부팅중...</div>}>
+        <KernelComp>
+          <ErrorBoundary fallback={<div style={{ color: "red" }}>⚠️ Boot 시스템 오류 발생!</div>}>
+            <Suspense fallback={<div>시스템 부팅중...</div>}>
+              <BootComponent>
+                <ErrorBoundary 
+                  fallback={(error: Error) => (
+                    <div style={{ 
+                      padding: "10px", 
+                      backgroundColor: "#ffebee", 
+                      border: "1px solid #f44336",
+                      borderRadius: "4px",
+                      margin: "10px"
+                    }}>
+                      <strong>OS 로딩 실패:</strong> {error.message}
+                    </div>
+                  )}
+                >
+                  <Suspense fallback={<div>OS 준비중..</div>}>
+                    <UIComponent>
+                      <Suspense fallback={<div>OS 준비중..1</div>}>
+                        <UIComponent />
+                      </Suspense>
+                    </UIComponent>
+                  </Suspense>
+                </ErrorBoundary>
+              </BootComponent>
             </Suspense>
-          </BootComponent>
-        </Suspense>
-      </KernelComp>
-    </Suspense>
+          </ErrorBoundary>
+        </KernelComp>
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 
