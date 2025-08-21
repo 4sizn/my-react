@@ -42,9 +42,14 @@ const BootComponent = withProcedure(
 const UIComponent = withProcedure(
   OSUI,
   () =>
-    new Promise((resolve) => {
+    new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve("OS 준비완료");
+        // 테스트를 위해 50% 확률로 에러 발생
+        if (Math.random() > 0.5) {
+          reject(new Error("OS 로딩 실패!"));
+        } else {
+          resolve("OS 준비완료");
+        }
       }, 3000);
     })
 );
