@@ -1,4 +1,5 @@
-import React, { Component, ReactNode } from "react";
+import type React from "react";
+import { Component, type ReactNode } from "react";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -32,21 +33,23 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       if (typeof this.props.fallback === "function") {
         return this.props.fallback(this.state.error!);
       }
-      
+
       // fallback prop이 ReactNode인 경우 그대로 렌더링
       if (this.props.fallback) {
         return this.props.fallback;
       }
-      
+
       // 기본 fallback UI
       return (
-        <div style={{ 
-          padding: "20px", 
-          backgroundColor: "#ffebee", 
-          border: "1px solid #ef5350",
-          borderRadius: "4px",
-          color: "#c62828"
-        }}>
+        <div
+          style={{
+            padding: "20px",
+            backgroundColor: "#ffebee",
+            border: "1px solid #ef5350",
+            borderRadius: "4px",
+            color: "#c62828",
+          }}
+        >
           <h2>⚠️ 오류가 발생했습니다</h2>
           <details style={{ whiteSpace: "pre-wrap", marginTop: "10px" }}>
             <summary>오류 상세 정보</summary>

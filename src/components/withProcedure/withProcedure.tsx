@@ -1,8 +1,9 @@
-import React, { ComponentType } from "react";
+import type React from "react";
+import type { ComponentType } from "react";
 
 export function wrappedPromise<T>(promise: Promise<T>) {
   let status: "pending" | "success" | "error" = "pending";
-  let result: T | undefined = undefined;
+  let result: T | undefined;
 
   const suspender = promise
     .then((data: T) => {
@@ -18,9 +19,11 @@ export function wrappedPromise<T>(promise: Promise<T>) {
     suspenseRead() {
       if (status === "pending") {
         throw suspender;
-      } else if (status === "error") {
+      }
+      if (status === "error") {
         throw result;
-      } else if (status === "success") {
+      }
+      if (status === "success") {
         return result;
       }
     },
@@ -34,11 +37,11 @@ export function wrappedPromise<T>(promise: Promise<T>) {
  */
 export function withProcedure<T, P extends React.PropsWithChildren>(
   WrappedComponent: ComponentType<P>,
-  procedure: () => Promise<T> | T
+  procedure: () => Promise<T> | T,
 ): React.FC<P & { output?: T }> {
   // 컴포넌트 외부에서 resource를 캐싱하여 재사용
   let resource: ReturnType<typeof wrappedPromise> | null = null;
-  
+
   return function (props: P) {
     // 최초 렌더링 시에만 resource 생성
     if (!resource) {
