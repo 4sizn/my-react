@@ -1,9 +1,10 @@
 import React, { Suspense } from "react";
-import { withProcedure, wrappedPromise } from "./components";
+
+import { withProcedure } from "./components";
 function App() {
   return (
     <Suspense fallback="커널 부팅중...">
-      <KurnelComp>
+      <KernelComp>
         <Suspense>
           <BootComponent>
             <Suspense fallback="OS 준비중..">
@@ -15,67 +16,61 @@ function App() {
             </Suspense>
           </BootComponent>
         </Suspense>
-      </KurnelComp>
+      </KernelComp>
     </Suspense>
   );
 }
 
 export default App;
 
-const KurnelComp = withProcedure(KurnelUI, () =>
-  wrappedPromise(
-    new Promise((resolve) => {
-      // setTimeout(() => {
-      console.log("aa");
-      resolve("System 준비완료");
-      // }, 0);
-    })
-  )
-);
+const KernelComp = withProcedure(KernelUI, () => {
+  console.log("커널");
+  return "커널 준비완료";
+});
 
-const BootComponent = withProcedure(BootUI, () =>
-  wrappedPromise(
+const BootComponent = withProcedure(
+  BootUI,
+  () =>
     new Promise((resolve) => {
       setTimeout(() => {
-        console.log("aa");
+        console.log("부팅중");
         resolve("System 준비완료");
-      }, 0);
+      }, 3000);
     })
-  )
 );
 
-const UIComponent = withProcedure(OSUI, () =>
-  wrappedPromise(
+const UIComponent = withProcedure(
+  OSUI,
+  () =>
     new Promise((resolve) => {
       setTimeout(() => {
         resolve("OS 준비완료");
       }, 3000);
     })
-  )
 );
 
-function KurnelUI(props: React.PropsWithChildren) {
+function KernelUI(props: React.PropsWithChildren<{ output?: string }>) {
   return (
     <div>
-      <div>KurnelUI 완료</div>
+      <div>KernelUI 완료 ##{props?.output}</div>
       <div {...props} />
     </div>
   );
 }
 
-function BootUI(props: React.PropsWithChildren) {
+function BootUI(props: React.PropsWithChildren<{ output?: string }>) {
   return (
     <div>
-      <div>BOOTUI 완료</div>
+      <div>BOOTUI 완료 ##{props?.output}</div>
       <div {...props} />
     </div>
   );
 }
 
-function OSUI(props: React.PropsWithChildren) {
+function OSUI(props: React.PropsWithChildren<{ output?: string }>) {
   return (
     <div>
-      <div>OSUI 완료</div>
+      <div>OSUI 완료 ##{props?.output}</div>
       <div {...props} />
     </div>
   );

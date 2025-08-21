@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, useEffect, useRef, useState } from "react";
 
 export function wrappedPromise<T>(promise: Promise<T>) {
   let status: "pending" | "success" | "error" = "pending";
@@ -27,21 +27,30 @@ export function wrappedPromise<T>(promise: Promise<T>) {
   };
 }
 
-export function withProcedure<P extends React.PropsWithChildren>(
+export function withProcedure<T, P extends React.PropsWithChildren>(
   WrappedComponent: ComponentType<P>,
-  procedure: () => ReturnType<typeof wrappedPromise>
-) {
-  const resource = () => procedure;
+  procedure: () => Promise<T> | T
+): React.FC<P & { output?: T }> {
   return function (props: P) {
-    const [a, setA] = useState<ReturnType<ReturnType<typeof resource>> | null>(
-      null
-    );
+    const [resource, setResource] = useState<ReturnType<
+      typeof wrappedPromise
+    > | null>(null);
+    const initialized = useRef(false);
+
     useEffect(() => {
-      setA(resource());
+      if (!initialized.current) {
+        const promise = Promise.resolve(procedure());
+        setResource(wrappedPromise(promise));
+        initialized.current = true;
+      }
     }, []);
 
-    const data = a?.suspenseRead();
-    if (!data) return;
-    return <WrappedComponent {...props} />;
+    if (!resource) {
+      // 로딩 상태 처리 로직 추가
+      return <div>Loading...</div>;
+    }
+
+    const data = resource.suspenseRead();
+    return <WrappedComponent {...props} output={data} />;
   };
 }
